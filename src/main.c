@@ -22,7 +22,9 @@ int main(void){
     stack_push(cpu, 0x1337);
 
     hexdump_memory(cpu->memory+0xEA0, 0x100);
-    
+   
+    cpu_info_registers(cpu);
+
     stack_pop(cpu, &res);
 
     printf("Popped: %04x\n", res);

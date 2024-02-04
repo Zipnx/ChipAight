@@ -28,4 +28,6 @@ struct CPU {
 
 struct CPU* init_cpu();
 
+void cpu_info_registers(struct CPU* cpu);
+
 #endif

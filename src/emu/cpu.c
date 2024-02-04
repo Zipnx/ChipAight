@@ -32,3 +32,21 @@ struct CPU* init_cpu(){
 
     return cpu;
 }
+
+void cpu_info_registers(struct CPU *cpu){
+    // TODO: Make this prettier at some point
+    
+    printf("\n========== Registers ==========\n");
+    
+    printf("SP = 0x%04x\n", cpu->sp);
+    printf("PC = 0x%04x\n", cpu->pc);
+    printf("I  = 0x%04x\n", cpu->I);
+
+    for (int i = 0; i < 16; i++){
+        printf("V[%x] = 0x%02x\n", i, cpu->V[i]);
+    }
+
+    printf("delay_timer = 0x%04x\n", cpu->delay_timer);
+    printf("sound_timer = 0x%04x\n", cpu->sound_timer);
+
+}
