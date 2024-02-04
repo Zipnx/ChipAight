@@ -2,6 +2,8 @@
 #include "emu/cpu.h"
 #include "emu/memory.h"
 
+#include "utils/fileutil.h"
+
 int main(void){
 
     struct CPU* cpu = init_cpu();
@@ -10,24 +12,13 @@ int main(void){
 
     printf("CPU: %p\n", cpu);
 
-    write_uint16(cpu, 0x300, 0x6969);
-    
-    hexdump_memory(cpu->memory + 0x300, 16); 
+    printf("Filesize: %ld\n", get_filesize("./tests/junk.dat"));
 
-    uint16_t res;
-    read_uint16(cpu, 0x300, &res);
+    char* idk = malloc(20);
 
-    printf("Value: %04x\n", res);
-    
-    stack_push(cpu, 0x1337);
+    load_file("./tests/junk.dat", idk, 0);
 
-    hexdump_memory(cpu->memory+0xEA0, 0x100);
-   
-    cpu_info_registers(cpu);
-
-    stack_pop(cpu, &res);
-
-    printf("Popped: %04x\n", res);
+    printf("Data: \"%s\"\n", idk);
 
     return 0;
 }
