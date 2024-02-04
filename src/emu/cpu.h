@@ -8,6 +8,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "memory.h"
+
 #define MEMORY_SIZE 0x1000
 
 struct CPU {
