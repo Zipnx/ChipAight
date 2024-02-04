@@ -26,6 +26,8 @@ struct CPU {
     uint16_t sound_timer;
 };
 
+int cpu_cycle(struct CPU* cpu);
+
 struct CPU* init_cpu();
 
 void cpu_info_registers(struct CPU* cpu);

@@ -3,6 +3,7 @@
 #include "emu/memory.h"
 
 #include "utils/fileutil.h"
+#include <stdio.h>
 
 int main(void){
 
@@ -14,11 +15,18 @@ int main(void){
 
     printf("Filesize: %ld\n", get_filesize("./tests/junk.dat"));
 
-    char* idk = malloc(20);
+    load_file("./tests/coin_flipping.ch8", (char*)cpu->memory, 0x200);
 
-    load_file("./tests/junk.dat", idk, 0);
+    hexdump_memory(cpu->memory, 0x400);
+    
+    while (1){
 
-    printf("Data: \"%s\"\n", idk);
+        cpu_cycle(cpu);
+        cpu_info_registers(cpu);
+
+        getchar();
+
+    }
 
     return 0;
 }

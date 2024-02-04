@@ -1,6 +1,20 @@
 
 #include "cpu.h"
-#include <string.h>
+#include "memory.h"
+#include "opcodes.h"
+
+int cpu_cycle(struct CPU *cpu){
+
+    uint16_t op = get_current_opcode(cpu); 
+
+    printf("[*] Executing: 0x%04x\n", op);
+    
+    if (execute_opcode(cpu, op) != 1)
+        return 0;
+
+    return 1;
+}
+
 
 struct CPU* init_cpu(){
 
