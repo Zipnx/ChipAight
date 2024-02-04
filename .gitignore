@@ -1,0 +1,8 @@
+*.o
+*.d
+
+emulator
+
+/.git/
+/build/
+/tests/
