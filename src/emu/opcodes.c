@@ -2,6 +2,8 @@
 #include "opcodes.h"
 #include "cpu.h"
 #include "memory.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
  * This code is absolutely disgusting
@@ -70,14 +72,12 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
     case 6:
         // 6XNN mov Vx, NN
         cpu->V[regx] = op & 0xFF;
-        cpu->pc += 2;
-        return 1;
+        break;
 
     case 7:
         // 7XNN add Vx, NN (carry not affected)
         cpu->V[regx] += op & 0xFF;
-        cpu->pc += 2;
-        return 1;
+        break;
 
     case 8:
         // 8--- Here are multiple arithmetic opcodes
@@ -85,7 +85,53 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
         // still, looks like shit
         return execute_arithm_opcode(cpu, op);
     
-    // TODO: Add the opcodes after 9+
+    case 9:
+        // 9XY0 If (Vx != Vy) skip the next instruction
+        cpu->pc += (cpu->V[regx] != cpu->V[regy]) ? 4 : 2;
+        return 1;
+
+    case 0xA:
+        // ANNN Set I = NNN
+        cpu->I = (op & 0x0FFF);
+        break;
+
+    case 0xB:
+        // BNNN Jmp to V[0] + NNN
+        cpu->pc = (op & 0x0FFF) + cpu->V[0];
+        return 1;
+
+    case 0xC:
+        // CXNN Vx = rand() & NN
+        cpu->V[regx] = rand() & (op & 0xff);
+        break;
+
+    case 0xD:
+        // DXYN display(Vx, Vy, N)
+        fprintf(stderr, "[!] UNIMPLEMENTED : display(Vx, Vy, N)\n");
+        break;
+
+    case 0xE:
+        // EX9E / EXA1 Key operations
+
+        if ( (op & 0xff) == 0x9E ){
+            
+            fprintf(stderr, "[!] UNIMPLEMENTED : Skip if pressed\n");
+            break;
+
+        } else if ( (op & 0xff) == 0xA1 ) {
+            
+            fprintf(stderr, "[!] UNIMPLEMENTED : Skip if not pressed\n");
+            break;
+
+        } else {
+
+            fprintf(stderr, "[!] Invalid keyop: 0x%04x\n", op);
+            return 0;
+
+        }
+    
+    case 0xF:
+        return execute_misc_opcode(cpu, op);
 
     default:
         fprintf(stderr, "[!] Error handling instruction: 0x%04x\n", op);
@@ -166,6 +212,69 @@ int execute_arithm_opcode(struct CPU *cpu, uint16_t op){
     return 1;
 }
 
+int execute_misc_opcode(struct CPU* cpu, uint16_t op){
+
+    // May use this to add more instructions to play around with
+
+    int regx = op_get_regx(op);
+
+    switch (op & 0xff){
+
+    case 0x07:
+        // Set Vx to the delay timer
+        cpu->V[regx] = cpu->delay_timer & 0xff;
+        break;
+
+    case 0x0A:
+        fprintf(stderr, "[!] UNIMPLEMENTED : Store pressed key\n");
+        break;
+
+    case 0x15:
+        // Set the delay timer to vx
+        cpu->delay_timer = cpu->V[regx];
+        break;
+
+    case 0x18:
+        // Set the sound timer to Vx
+        cpu->sound_timer = cpu->V[regx];
+        break;
+
+    case 0x1E:
+        // I += Vx (does not affect carry)
+        cpu->I += (cpu->V[regx] & 0xFFF); // I is meant to be 12 bits
+        break;
+
+    case 0x29:
+        fprintf(stderr, "[!] UNIMPLEMENTED : sprite_addr\n");
+        break;
+
+    case 0x33:
+        fprintf(stderr, "[!] UNIMPLEMENTED : BCD Instruction\n");
+        break;
+
+    case 0x55:
+        // Dump registers up to and including Vx to the location pointed by I
+        
+        cpu_memwrite(cpu, cpu->I, &cpu->V, regx + 1);
+        break;
+
+    case 0x65:
+        // Store to V regs data stored at I up to I+X+1
+
+        cpu_memread(cpu, cpu->I, &cpu->V, regx + 1);
+        break;
+
+    default:
+    
+        fprintf(stderr, "[!] (misc) Invalid instruction: 0x%04x\n", op);
+        return 0;
+
+    }
+
+    cpu->pc += 2;
+    return 1;
+
+}    
 
 inline uint16_t get_current_opcode(struct CPU *cpu){
 

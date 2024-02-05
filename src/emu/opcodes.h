@@ -11,6 +11,7 @@ struct CPU;
 int execute_opcode(struct CPU* cpu, uint16_t op);
 
 int execute_arithm_opcode(struct CPU* cpu, uint16_t op);
+int execute_misc_opcode(struct CPU* cpu, uint16_t op);
 
 uint16_t get_current_opcode(struct CPU* cpu);
 

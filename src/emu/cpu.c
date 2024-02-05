@@ -12,6 +12,11 @@ int cpu_cycle(struct CPU *cpu){
     if (execute_opcode(cpu, op) != 1)
         return 0;
 
+    
+    // These are meant to tick down at 60hz, gonna fix that later
+    cpu->delay_timer -= (cpu->delay_timer > 0) ? 1 : 0;
+    cpu->sound_timer -= (cpu->sound_timer > 0) ? 1 : 0;
+
     return 1;
 }
 
