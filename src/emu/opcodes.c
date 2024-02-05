@@ -255,13 +255,13 @@ int execute_misc_opcode(struct CPU* cpu, uint16_t op){
     case 0x55:
         // Dump registers up to and including Vx to the location pointed by I
         
-        cpu_memwrite(cpu, cpu->I, &cpu->V, regx + 1);
+        cpu_memwrite(cpu, cpu->I, (char*)(&cpu->V), regx + 1);
         break;
 
     case 0x65:
         // Store to V regs data stored at I up to I+X+1
 
-        cpu_memread(cpu, cpu->I, &cpu->V, regx + 1);
+        cpu_memread(cpu, cpu->I, (char*)(&cpu->V), regx + 1);
         break;
 
     default:

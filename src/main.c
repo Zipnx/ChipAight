@@ -11,13 +11,9 @@ int main(void){
 
     if (cpu == NULL) return 1;
 
-    printf("CPU: %p\n", cpu);
-
-    printf("Filesize: %ld\n", get_filesize("./tests/junk.dat"));
-
     load_file("./tests/coin_flipping.ch8", (char*)cpu->memory, 0x200);
 
-    hexdump_memory(cpu->memory, 0x400);
+    //hexdump_memory(cpu->memory, 0x400);
     
     while (1){
 
