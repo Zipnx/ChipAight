@@ -7,6 +7,13 @@ int cpu_cycle(struct CPU *cpu){
 
     uint16_t op = get_current_opcode(cpu); 
 
+    // Should probably check if it reaches the stack region, but i think leaving it as a possibility is more fun
+    // could also happen by manually adding data to the stack and calling ret, could set the pc to any 16 bit value
+
+    if (cpu->pc > MEMORY_SIZE) {
+        fprintf(stderr, "[!] PC Register exceeded memory\n");
+    }
+
     printf("[*] Executing: 0x%04x\n", op);
     
     if (execute_opcode(cpu, op) != 1)

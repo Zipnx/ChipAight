@@ -11,7 +11,7 @@ int main(void){
 
     if (cpu == NULL) return 1;
 
-    load_file("./tests/coin_flipping.ch8", (char*)cpu->memory, 0x200);
+    load_file("./tests/test.ch8", (char*)cpu->memory, 0x200);
 
     //hexdump_memory(cpu->memory, 0x400);
     
@@ -19,6 +19,8 @@ int main(void){
 
         cpu_cycle(cpu);
         cpu_info_registers(cpu);
+
+        hexdump_memory(cpu->memory+0x300, 8);
 
         getchar();
 

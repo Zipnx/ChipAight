@@ -16,7 +16,10 @@ make build
 ## TODO:
  - [X] Be able to somewhat run a bin
  - [ ] Add a proper display (probably SDL2)
+ - [ ] Add the bit fonts
  - [ ] Make some test bin to check instruction implementations
  - [ ] There are still some OPs missing
  - [ ] Documentation (lmao)
  - [ ] Fix timers to tick at 60hz
+ - [ ] Cmdline arguments
+ - [ ] Proper logging

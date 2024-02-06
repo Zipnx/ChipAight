@@ -98,6 +98,14 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
     case 0xB:
         // BNNN Jmp to V[0] + NNN
         cpu->pc = (op & 0x0FFF) + cpu->V[0];
+
+        if (cpu->pc >= MEMORY_SIZE){
+            
+            fprintf(stderr, "[!] PC register exceeded memory\n");
+            return 0;
+
+        }
+
         return 1;
 
     case 0xC:
@@ -249,17 +257,45 @@ int execute_misc_opcode(struct CPU* cpu, uint16_t op){
         break;
 
     case 0x33:
-        fprintf(stderr, "[!] UNIMPLEMENTED : BCD Instruction\n");
+        // Convert Vx to BCD, and store it at the addr pointed by I (100s in I, 10s in I+1, 1s in I+2)
+
+        if (cpu->I + 3 > MEMORY_SIZE) {
+            fprintf(stderr, "[!] OOB Write when calculating BCD\n");
+            return 0;
+        }
+
+        uint8_t tmp = cpu->V[regx];
+        
+        // Start with the 1s
+        cpu->memory[cpu->I + 2] = tmp % 10;
+        tmp /= 10;
+        cpu->memory[cpu->I + 1] = tmp % 10;
+        tmp /= 10;
+        cpu->memory[cpu->I] = tmp % 10;
+
+
         break;
 
     case 0x55:
         // Dump registers up to and including Vx to the location pointed by I
         
+        // (not destructive for I itself)
+        
+        if (cpu->I + regx + 1 > MEMORY_SIZE){
+            fprintf(stderr, "[!] Prevented out of bounds write\n");
+            return 0;
+        }
+
         cpu_memwrite(cpu, cpu->I, (char*)(&cpu->V), regx + 1);
         break;
 
     case 0x65:
         // Store to V regs data stored at I up to I+X+1
+        
+        if (cpu->I + regx + 1 > MEMORY_SIZE){
+            fprintf(stderr, "[!] Prevented out of bounds read\n");
+            return 0;
+        }
 
         cpu_memread(cpu, cpu->I, (char*)(&cpu->V), regx + 1);
         break;
