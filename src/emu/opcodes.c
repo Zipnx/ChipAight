@@ -11,6 +11,8 @@
  *
  */
 
+// This resource is more accurate:
+
 int execute_opcode(struct CPU *cpu, uint16_t op){
 
     int regx = op_get_regx(op);
@@ -195,7 +197,9 @@ int execute_arithm_opcode(struct CPU *cpu, uint16_t op){
 
     case 6:
         // 8XY6 Vx >>= 1
+        cpu->V[0xf] = ((cpu->V[regx] & 0x1) > 0) ? 1 : 0;  
         cpu->V[regx] >>= 1;
+
         break;
 
     case 7:
@@ -206,7 +210,7 @@ int execute_arithm_opcode(struct CPU *cpu, uint16_t op){
 
     case 0xE:
         // 8XYE Vx <<= 1
-        
+        cpu->V[0xf] = ((cpu->V[regx] & 0x80) > 0) ? 1 : 0;
         cpu->V[regx] <<= 1;
         break;
 
@@ -253,7 +257,8 @@ int execute_misc_opcode(struct CPU* cpu, uint16_t op){
         break;
 
     case 0x29:
-        fprintf(stderr, "[!] UNIMPLEMENTED : sprite_addr\n");
+        cpu->I = (cpu->V[regx] & 0xf) * 5;
+
         break;
 
     case 0x33:

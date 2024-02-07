@@ -11,6 +11,9 @@
 #include "memory.h"
 
 #define MEMORY_SIZE 0x1000
+#define FONTS_SIZE 80
+
+extern char default_font[FONTS_SIZE];
 
 struct CPU {
 
@@ -22,8 +25,8 @@ struct CPU {
     uint16_t sp;
     uint16_t I;
 
-    uint16_t delay_timer;
-    uint16_t sound_timer;
+    uint8_t delay_timer;
+    uint8_t sound_timer;
 };
 
 int cpu_cycle(struct CPU* cpu);
