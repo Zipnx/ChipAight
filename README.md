@@ -15,11 +15,19 @@ To build the emulator run
 make build
 ```
 
+To run you can then use
+```
+./emulator <CH8 Bytecode File>
+
+```
+If a file is not specified a default test file will be used
+
 ## TODO:
  - [x] Be able to somewhat run a bin
  - [ ] Add a proper display (probably SDL2)
+ - [ ] Keyboard inputs
  - [x] Add the bit fonts
- - [ ] Make some test bin to check instruction implementations
+ - [x] Make some test bin to check instruction implementations
  - [ ] There are still some OPs missing
  - [ ] Documentation (lmao)
  - [ ] Fix timers to tick at 60hz

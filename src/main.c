@@ -12,7 +12,7 @@ int main(int argc, char** argv){
     if (argc > 1){
         rom = argv[1];
     } else {
-        rom = "./tests/test.ch8";
+        rom = "./tests/test_arithm_carries.ch8";
     }
 
     struct CPU* cpu = init_cpu();
