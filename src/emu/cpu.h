@@ -16,8 +16,9 @@
 extern char default_font[FONTS_SIZE];
 
 struct CPU {
-
+    
     uint8_t* memory;
+    uint16_t pressed_keys;
 
     uint8_t V[16];
 

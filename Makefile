@@ -2,6 +2,9 @@
 CC := /usr/bin/gcc
 CFLAGS := -Wall -Wextra -ggdb -MMD -MP
 
+SDL_CFLAGS  := $(shell /usr/bin/sdl2-config --cflags)
+SDL_LDFLAGS := $(shell /usr/bin/sdl2-config --libs)
+
 BUILDDIR 	:= ./build/
 SRCROOT 	:= ./src/
 BINDIR 		:= ./
@@ -27,11 +30,11 @@ build:
 	$(MAKE) $(BINDIR)$(BINNAME)
 
 $(BINDIR)$(BINNAME): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS) $(SDL_LDFLAGS)
 
 $(BUILDDIR)%.c.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(SDL_CFLAGS) -c $< -o $@
 
 clean:
 	$(RM) -r $(BUILDDIR)

@@ -86,6 +86,9 @@ struct CPU* init_cpu(){
     memset(cpu->V, 0, 16); 
     
     cpu_memwrite(cpu, 0, (char*)&default_font, FONTS_SIZE);
+    
+    /* Pressed keys will be stored bit-encoded from LSB to MSB */
+    cpu->pressed_keys = 0x0000;
 
     cpu->pc = 0x200;
     cpu->sp = 0xF00;

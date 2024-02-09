@@ -1,8 +1,11 @@
 
 #include "emu/cpu.h"
 #include "emu/memory.h"
+#include "display/gfxs.h"
 
 #include "utils/fileutil.h"
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_video.h>
 #include <stdio.h>
 
 int main(int argc, char** argv){
@@ -21,18 +24,29 @@ int main(int argc, char** argv){
 
     load_file(rom, (char*)cpu->memory, 0x200);
 
-    hexdump_memory(cpu->memory, 0x400);
+    if (!init_sdl2()){
+        fprintf(stderr, "[!] Error initializing SDL2\n");
+        return 1;
+    }
+
+    printf("[+] SDL2 Initialized\n");
     
-    while (1){
+    SDL_Event e;
+    SDL_Window* win = create_window("ChipAight", 680, 480); 
+    
+    bool running = true;
 
-        cpu_cycle(cpu);
-        cpu_info_registers(cpu);
+    while (running){
+        while (SDL_PollEvent(&e) != 0){
 
-        hexdump_memory(cpu->memory+0x300, 8);
+            if (e.type == SDL_QUIT) running = false;
 
-        getchar();
+        }
 
     }
+    
+
+    clean_sdl2();
 
     return 0;
 }
