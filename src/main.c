@@ -1,7 +1,7 @@
 
 #include "emu/cpu.h"
 #include "emu/memory.h"
-#include "display/gfxs.h"
+#include "display/display.h"
 
 #include "utils/fileutil.h"
 #include <SDL2/SDL_events.h>
@@ -32,19 +32,15 @@ int main(int argc, char** argv){
     printf("[+] SDL2 Initialized\n");
     
     SDL_Event e;
-    SDL_Window* win = create_window("ChipAight", 680, 480); 
     
-    bool running = true;
+    struct Display* display = initialize_display(640, 480);
 
-    while (running){
-        while (SDL_PollEvent(&e) != 0){
+    while (display->running) {
 
-            if (e.type == SDL_QUIT) running = false;
-
-        }
+        printf("%04x\n", get_keypresses(display));
+        SDL_Delay(15);
 
     }
-    
 
     clean_sdl2();
 
