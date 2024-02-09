@@ -4,8 +4,6 @@
 #include "display/display.h"
 
 #include "utils/fileutil.h"
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_video.h>
 #include <stdio.h>
 
 int main(int argc, char** argv){
@@ -31,8 +29,6 @@ int main(int argc, char** argv){
 
     printf("[+] SDL2 Initialized\n");
     
-    SDL_Event e;
-    
     struct Display* display = initialize_display(640, 480);
 
     while (display->running) {
@@ -42,6 +38,7 @@ int main(int argc, char** argv){
 
     }
 
+    deinit_display(display);
     clean_sdl2();
 
     return 0;

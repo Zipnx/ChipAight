@@ -1,7 +1,6 @@
 
 #include "display.h"
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keyboard.h>
+
 
 // As specified in the reference 1-16
 SDL_KeyCode key_mappings[16] = {
@@ -65,6 +64,20 @@ struct Display* initialize_display(int width, int height){
 
     }
 
+    dis->renderer = SDL_CreateRenderer(dis->window, -1, SDL_RENDERER_ACCELERATED);
+
+    if (dis->renderer == NULL){
+        fprintf(stderr, "[!] Unable to create SDL_Renderer\n");
+        return NULL;
+    }
+
     return dis;
+
+}
+
+void deinit_display(struct Display* display){
+
+    SDL_DestroyRenderer(display->renderer);
+    SDL_DestroyWindow(display->window);
 
 }

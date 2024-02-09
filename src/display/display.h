@@ -8,6 +8,7 @@
 
 struct Display {
     SDL_Window* window;
+    SDL_Renderer* renderer;
     
     bool running;
     int width;
@@ -16,6 +17,8 @@ struct Display {
 };
 
 uint16_t get_keypresses(struct Display* display);
+
 struct Display* initialize_display(int width, int height);
+void deinit_display(struct Display* display);
 
 #endif
