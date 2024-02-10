@@ -124,14 +124,17 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
         // EX9E / EXA1 Key operations
 
         if ( (op & 0xff) == 0x9E ){
+            // Skip the next instruction is key in Vx is pressed
             
-            fprintf(stderr, "[!] UNIMPLEMENTED : Skip if pressed\n");
-            break;
+            cpu->pc += ( (cpu->pressed_keys & (0x1 << cpu->V[regx])) != 0 ) ? 4 : 2;
+
+            return 1;
 
         } else if ( (op & 0xff) == 0xA1 ) {
             
-            fprintf(stderr, "[!] UNIMPLEMENTED : Skip if not pressed\n");
-            break;
+            cpu->pc += ( (cpu->pressed_keys & (0x1 << cpu->V[regx])) != 0 ) ? 2 : 4;
+
+            return 1;
 
         } else {
 
@@ -238,7 +241,25 @@ int execute_misc_opcode(struct CPU* cpu, uint16_t op){
         break;
 
     case 0x0A:
-        fprintf(stderr, "[!] UNIMPLEMENTED : Store pressed key\n");
+        // Wait for keypress (blocking), and store the value in Vx
+        
+        // This is very hacky, will basically not increment pc, always executing until
+        // a key is pressed, while it works exactly as needed, this kind of blocking the
+        // execution is not ideal, maybe will make a better system at some point
+        if (cpu->pressed_keys == 0){
+            return 1;
+        }
+
+        // Store the first key found in the keypress bits
+        for (int i = 0; i < 16; i++){
+            
+            if ( (cpu->pressed_keys & (0x1 << i)) != 0 ){
+                cpu->V[regx] = i;
+                break;
+            }
+
+        }
+    
         break;
 
     case 0x15:

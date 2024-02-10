@@ -4,6 +4,8 @@
 #include "display/display.h"
 
 #include "utils/fileutil.h"
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #include <stdio.h>
 
 int main(int argc, char** argv){
@@ -30,11 +32,27 @@ int main(int argc, char** argv){
     printf("[+] SDL2 Initialized\n");
     
     struct Display* display = initialize_display(640, 480);
+    
+    SDL_Rect idk = {100, 100, 100, 100};
 
     while (display->running) {
 
-        printf("%04x\n", get_keypresses(display));
-        SDL_Delay(15);
+        SDL_SetRenderDrawColor(display->renderer, 0, 0, 0, 255);
+        SDL_RenderClear(display->renderer);
+     
+        SDL_SetRenderDrawColor(display->renderer, 255, 255, 255, 255);
+        
+        //SDL_RenderDrawPoint(display->renderer, 200, 200);
+        SDL_RenderFillRect(display->renderer, &idk);
+
+        SDL_RenderPresent(display->renderer);
+        
+         
+        cpu->pressed_keys = get_keypresses(display);
+        
+        if (!cpu_cycle(cpu)) break;
+
+        //SDL_Delay(15);
 
     }
 
