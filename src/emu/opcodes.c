@@ -2,35 +2,34 @@
 #include "opcodes.h"
 #include "cpu.h"
 #include "memory.h"
+#include <SDL2/SDL_render.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int op_draw_sprite(struct CPU *cpu, int originX, int originY, int height){
 
-    char dataByte;
-    
-    char prevData;
-    int displayOffset = 0x0F00 + (originY * 8) + originX;
-    
-    if (displayOffset + height >= MEMORY_SIZE){
-        fprintf(stderr, "[!] OOB Write when writing at display buffer\n");
-        return 0;
-    }
-
     cpu->V[0xf] = 0;
-
-    for (int i = 0; i < height; i++, displayOffset += 8){
-        dataByte = cpu->memory[cpu->I + i];
-
-        prevData = (cpu->memory[displayOffset]);
-
-        cpu->memory[displayOffset] ^= dataByte;
-
-        cpu->V[0xf] = ( (cpu->memory[displayOffset] & prevData) != prevData ) ? 1 : 0;
-
-    }
     
+    uint8_t sourceData;
+    size_t displayDataCursor;
+
+    for (int i = 0; i < height; i++){
+        sourceData = cpu->memory[cpu->I + i];
+        
+        for (int mask = 0x80, j = 0; mask >= 1; mask >>= 1, j++){
+            
+            displayDataCursor = ( (originY + i) * 64 ) + originX + j;
+
+            if ( (sourceData & mask) != 0 ){
+                if (cpu->display_data[displayDataCursor] != 0)
+                    cpu->V[0xf] = 1;
+
+                cpu->display_data[displayDataCursor] ^= 1;
+
+            }
+        }
+    }
 
     cpu->pc += 2;
     return 1;
@@ -42,8 +41,6 @@ int op_draw_sprite(struct CPU *cpu, int originX, int originY, int height){
  * Gonna (probably) fix it sometime later
  *
  */
-
-// This resource is more accurate:
 
 int execute_opcode(struct CPU *cpu, uint16_t op){
 
@@ -66,7 +63,11 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
 
         } else if ( (op & 0x00FF) == 0xE0 ){
             
-            memset(cpu->memory + 0x0F00, 0, 256);
+            // Move this to graphics at some point
+            SDL_SetRenderDrawColor(cpu->display->renderer, 0, 0, 0, 255);
+            SDL_RenderClear(cpu->display->renderer);
+
+            memset(cpu->display_data, 0, DISPLAY_SIZE);
 
             break;
 

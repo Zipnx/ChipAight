@@ -43,14 +43,11 @@ int main(int argc, char** argv){
     while (display->running) {
         
         cpu->pressed_keys = get_keypresses(display);
-        printf("Pressed keys: 0x%04x\n", cpu->pressed_keys); 
+
         if (!cpu_cycle(cpu)) break;
         
         if (!cpu_display_refresh(cpu)) break;
         
-        hexdump_memory(cpu->memory+0xf00, 256);
-
-        SDL_Delay(200);
     }
 
     deinit_display(display);

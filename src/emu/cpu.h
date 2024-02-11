@@ -12,6 +12,7 @@
 #include "../display/display.h"
 
 #define MEMORY_SIZE 0x1000
+#define DISPLAY_SIZE 0x800
 #define FONTS_SIZE 80
 
 extern char default_font[FONTS_SIZE];
@@ -20,10 +21,8 @@ struct CPU {
     
     struct Display* display;
     
-    // For the display data only 256 bytes at the top of the memory, as the pixel data is
-    // stored bit-encoded will probably make this dynamic at some point as i want to
-    // support different display modes, meaning i'll have to seperate the display data from the
-    // emulator memory, or think of some different way to integrate
+    // Temporary solution, will make it use bits instead of whole bytes at some point
+    char* display_data;
 
     uint8_t* memory;
     uint16_t pressed_keys;

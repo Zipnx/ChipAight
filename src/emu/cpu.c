@@ -43,30 +43,26 @@ int cpu_display_refresh(struct CPU* cpu){
     
     if (cpu->display->currentFrameTimeMs++ > DISPLAY_FPS_MS){
         cpu->display->currentFrameTimeMs = 0;
-         
+        
+        // Finally tick down at 60fps
+        cpu->delay_timer--;
+        cpu->sound_timer--;
+
         SDL_SetRenderDrawColor(cpu->display->renderer, 255, 255, 255, 255); 
         
-        char displayByte;
         int curX, curY;
 
-        for (int i = 0xF00, j = 0; i < 0x1000; i++, j++){
+        for (int i = 0; i < DISPLAY_SIZE; i++){
+            
+            curY = i / 64;
+            curX = i % 64;
 
-            curY = j / 8;
-            curX = j % 8;
-
-            displayByte = cpu->memory[i];
-
-            for (int mask = 0x80; mask >= 1; mask >>= 1){
-                if ( (displayByte & mask) != 0 ){
-                    display_draw_bit(cpu->display, curX++, curY);
-                }
-
-            }
+            if (cpu->display_data[i] != 0)
+                display_draw_bit(cpu->display, curX, curY);
 
         }
-        
 
-        printf("Frame presented\n");
+
         SDL_RenderPresent(cpu->display->renderer);
 
     } 
@@ -82,15 +78,11 @@ int cpu_cycle(struct CPU *cpu){
         fprintf(stderr, "[!] PC Register exceeded memory\n");
     }
 
-    printf("[*] Executing: 0x%04x\n", op);
+    //printf("[*] Executing: 0x%04x\n", op);
     
     if (execute_opcode(cpu, op) != 1)
         return 0;
 
-    
-    // These are meant to tick down at 60hz, gonna fix that later
-    cpu->delay_timer -= (cpu->delay_timer > 0) ? 1 : 0;
-    cpu->sound_timer -= (cpu->sound_timer > 0) ? 1 : 0;
 
     return 1;
 }
@@ -116,6 +108,18 @@ struct CPU* init_cpu(struct Display* targetDisplay){
     }
     
     memset(cpu->memory, 0, MEMORY_SIZE);
+    
+    cpu->display_data = (char*)malloc(DISPLAY_SIZE);
+
+    if (cpu->display_data == NULL){
+        fprintf(stderr, "[!] Error allocating memory for display refresh data\n");
+        free(cpu->memory);
+        free(cpu);
+        return NULL;
+    }
+
+    memset(cpu->display_data, 0, DISPLAY_SIZE);
+
     memset(cpu->V, 0, 16); 
     
     cpu_memwrite(cpu, 0, (char*)&default_font, FONTS_SIZE);
