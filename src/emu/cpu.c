@@ -40,6 +40,38 @@ char default_font[FONTS_SIZE] = {
 };
 
 int cpu_display_refresh(struct CPU* cpu){
+    
+    if (cpu->display->currentFrameTimeMs++ > DISPLAY_FPS_MS){
+        cpu->display->currentFrameTimeMs = 0;
+         
+        SDL_SetRenderDrawColor(cpu->display->renderer, 255, 255, 255, 255); 
+        
+        char displayByte;
+        int curX, curY;
+
+        for (int i = 0xF00, j = 0; i < 0x1000; i++, j++){
+
+            curY = j / 64;
+            curX = j % 64;
+
+            displayByte = cpu->memory[i];
+
+            for (int mask = 0x80; mask >= 1; mask >>= 1){
+
+                if ( (displayByte & mask) != 0 ){
+                    display_draw_bit(cpu->display, curX++, curY);
+                }
+
+            }
+
+        }
+        
+
+        printf("Frame presented\n");
+        SDL_RenderPresent(cpu->display->renderer);
+
+    } 
+
     return 1;
 }
 

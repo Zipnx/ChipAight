@@ -19,7 +19,11 @@ extern char default_font[FONTS_SIZE];
 struct CPU {
     
     struct Display* display;
-
+    
+    // For the display data only 256 bytes at the top of the memory, as the pixel data is
+    // stored bit-encoded will probably make this dynamic at some point as i want to
+    // support different display modes, meaning i'll have to seperate the display data from the
+    // emulator memory, or think of some different way to integrate
 
     uint8_t* memory;
     uint16_t pressed_keys;

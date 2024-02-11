@@ -1,5 +1,6 @@
 
 #include "display.h"
+#include "gfxs.h"
 
 
 // As specified in the reference 1-16
@@ -10,7 +11,11 @@ SDL_KeyCode key_mappings[16] = {
     SDLK_h, SDLK_j, SDLK_k, SDLK_l
 };
 
-bool emulator_display_loop(){
+void display_draw_bit(struct Display *display, int emuX, int emuY){
+    // emuX and emuY dont represent direct pixels on the screen, but the ones after an upscale
+
+    draw_square(display->renderer, emuX * display->upscale, emuY * display->upscale, display->upscale);
+    
 
 }
 
@@ -58,7 +63,9 @@ struct Display* initialize_display(int width, int height){
     dis->running = true;
     dis->width = width;
     dis->height = height;
-    
+
+    dis->upscale = 8;
+
     dis->currentFrameTimeMs = 0;
 
     dis->window = create_window("Chip Aight", width, height);

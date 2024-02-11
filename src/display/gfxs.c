@@ -1,6 +1,7 @@
 
 #include "gfxs.h"
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
 
@@ -15,6 +16,16 @@ SDL_Window* create_window(char* title, int width, int height){
     }
 
     return wnd;
+
+}
+
+void draw_square(SDL_Renderer *renderer, int x, int y, int dim){
+
+    SDL_Rect tmp = {x, y, dim, dim};
+
+    SDL_RenderFillRect(renderer, &tmp);
+
+    return;
 
 }
 

@@ -18,7 +18,7 @@ int main(int argc, char** argv){
         rom = "./tests/test_arithm_carries.ch8";
     }
 
-    struct Display* display = initialize_display(640, 480);
+    struct Display* display = initialize_display(512, 256);
     
     if (display == NULL){
         fprintf(stderr, "[!] Error initializing display\n");
@@ -28,6 +28,8 @@ int main(int argc, char** argv){
     struct CPU* cpu = init_cpu(display);
 
     if (cpu == NULL) return 1;
+    
+    cpu->memory[0xF00] = 0xff;
 
     load_file(rom, (char*)cpu->memory, 0x200);
    
