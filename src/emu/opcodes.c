@@ -4,6 +4,38 @@
 #include "memory.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+int op_draw_sprite(struct CPU *cpu, int originX, int originY, int height){
+
+    char dataByte;
+    
+    char prevData;
+    int displayOffset = 0x0F00 + (originY * 8) + originX;
+    
+    if (displayOffset + height >= MEMORY_SIZE){
+        fprintf(stderr, "[!] OOB Write when writing at display buffer\n");
+        return 0;
+    }
+
+    cpu->V[0xf] = 0;
+
+    for (int i = 0; i < height; i++, displayOffset += 8){
+        dataByte = cpu->memory[cpu->I + i];
+
+        prevData = (cpu->memory[displayOffset]);
+
+        cpu->memory[displayOffset] ^= dataByte;
+
+        cpu->V[0xf] = ( (cpu->memory[displayOffset] & prevData) != prevData ) ? 1 : 0;
+
+    }
+    
+
+    cpu->pc += 2;
+    return 1;
+
+}
 
 /*
  * This code is absolutely disgusting
@@ -34,7 +66,8 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
 
         } else if ( (op & 0x00FF) == 0xE0 ){
             
-            fprintf(stderr, "[!] UNIMPLEMENTED : disp_clear()\n");
+            memset(cpu->memory + 0x0F00, 0, 256);
+
             break;
 
         } else {
@@ -117,8 +150,8 @@ int execute_opcode(struct CPU *cpu, uint16_t op){
 
     case 0xD:
         // DXYN display(Vx, Vy, N)
-        fprintf(stderr, "[!] UNIMPLEMENTED : display(Vx, Vy, N)\n");
-        break;
+        
+        return op_draw_sprite(cpu, cpu->V[regx], cpu->V[regy], op & 0xf); 
 
     case 0xE:
         // EX9E / EXA1 Key operations

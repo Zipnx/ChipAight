@@ -8,6 +8,8 @@
 
 struct CPU;
 
+int op_draw_sprite(struct CPU* cpu, int originX, int originY, int height);
+
 int execute_opcode(struct CPU* cpu, uint16_t op);
 
 int execute_arithm_opcode(struct CPU* cpu, uint16_t op);

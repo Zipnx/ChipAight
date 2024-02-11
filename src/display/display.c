@@ -22,7 +22,7 @@ void display_draw_bit(struct Display *display, int emuX, int emuY){
 uint16_t get_keypresses(struct Display* display){
 
     SDL_Event e;
-    uint16_t keybits;
+    uint16_t keybits = 0;
 
     while (SDL_PollEvent(&e) != 0){
         

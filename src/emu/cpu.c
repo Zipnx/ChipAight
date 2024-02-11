@@ -51,13 +51,12 @@ int cpu_display_refresh(struct CPU* cpu){
 
         for (int i = 0xF00, j = 0; i < 0x1000; i++, j++){
 
-            curY = j / 64;
-            curX = j % 64;
+            curY = j / 8;
+            curX = j % 8;
 
             displayByte = cpu->memory[i];
 
             for (int mask = 0x80; mask >= 1; mask >>= 1){
-
                 if ( (displayByte & mask) != 0 ){
                     display_draw_bit(cpu->display, curX++, curY);
                 }
@@ -115,7 +114,8 @@ struct CPU* init_cpu(struct Display* targetDisplay){
         free(cpu);
         return NULL;
     }
-
+    
+    memset(cpu->memory, 0, MEMORY_SIZE);
     memset(cpu->V, 0, 16); 
     
     cpu_memwrite(cpu, 0, (char*)&default_font, FONTS_SIZE);
