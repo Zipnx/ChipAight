@@ -18,11 +18,19 @@ int main(int argc, char** argv){
         rom = "./tests/test_arithm_carries.ch8";
     }
 
-    struct CPU* cpu = init_cpu();
+    struct Display* display = initialize_display(640, 480);
+    
+    if (display == NULL){
+        fprintf(stderr, "[!] Error initializing display\n");
+        return 1;
+    }
+
+    struct CPU* cpu = init_cpu(display);
 
     if (cpu == NULL) return 1;
 
     load_file(rom, (char*)cpu->memory, 0x200);
+   
 
     if (!init_sdl2()){
         fprintf(stderr, "[!] Error initializing SDL2\n");
@@ -31,28 +39,16 @@ int main(int argc, char** argv){
 
     printf("[+] SDL2 Initialized\n");
     
-    struct Display* display = initialize_display(640, 480);
-    
-    SDL_Rect idk = {100, 100, 100, 100};
 
     while (display->running) {
-
-        SDL_SetRenderDrawColor(display->renderer, 0, 0, 0, 255);
-        SDL_RenderClear(display->renderer);
-     
-        SDL_SetRenderDrawColor(display->renderer, 255, 255, 255, 255);
         
-        //SDL_RenderDrawPoint(display->renderer, 200, 200);
-        SDL_RenderFillRect(display->renderer, &idk);
-
-        SDL_RenderPresent(display->renderer);
-        
-         
         cpu->pressed_keys = get_keypresses(display);
         
         if (!cpu_cycle(cpu)) break;
+        
+        if (!cpu_display_refresh(cpu)) break;
 
-        //SDL_Delay(15);
+        SDL_Delay(32);
 
     }
 

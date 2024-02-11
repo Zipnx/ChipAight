@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "memory.h"
+#include "../display/display.h"
 
 #define MEMORY_SIZE 0x1000
 #define FONTS_SIZE 80
@@ -17,6 +18,9 @@ extern char default_font[FONTS_SIZE];
 
 struct CPU {
     
+    struct Display* display;
+
+
     uint8_t* memory;
     uint16_t pressed_keys;
 
@@ -30,9 +34,10 @@ struct CPU {
     uint8_t sound_timer;
 };
 
+int cpu_display_refresh(struct CPU* cpu);
 int cpu_cycle(struct CPU* cpu);
 
-struct CPU* init_cpu();
+struct CPU* init_cpu(struct Display* targetDisplay);
 
 void cpu_info_registers(struct CPU* cpu);
 

@@ -39,12 +39,13 @@ char default_font[FONTS_SIZE] = {
 
 };
 
+int cpu_display_refresh(struct CPU* cpu){
+    return 1;
+}
+
 int cpu_cycle(struct CPU *cpu){
 
     uint16_t op = get_current_opcode(cpu); 
-
-    // Should probably check if it reaches the stack region, but i think leaving it as a possibility is more fun
-    // could also happen by manually adding data to the stack and calling ret, could set the pc to any 16 bit value
 
     if (cpu->pc > MEMORY_SIZE) {
         fprintf(stderr, "[!] PC Register exceeded memory\n");
@@ -64,7 +65,7 @@ int cpu_cycle(struct CPU *cpu){
 }
 
 
-struct CPU* init_cpu(){
+struct CPU* init_cpu(struct Display* targetDisplay){
 
     struct CPU* cpu = (struct CPU*)malloc(sizeof (struct CPU));
 
@@ -87,6 +88,8 @@ struct CPU* init_cpu(){
     
     cpu_memwrite(cpu, 0, (char*)&default_font, FONTS_SIZE);
     
+    cpu->display = targetDisplay;
+
     /* Pressed keys will be stored bit-encoded from LSB to MSB */
     cpu->pressed_keys = 0x0000;
 

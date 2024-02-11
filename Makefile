@@ -1,6 +1,6 @@
 
 CC := /usr/bin/gcc
-CFLAGS := -Wall -Wextra -ggdb -MMD -MP
+CFLAGS := -pg -Wall -Wextra -ggdb -MMD -MP
 
 SDL_CFLAGS  := $(shell /usr/bin/sdl2-config --cflags)
 SDL_LDFLAGS := $(shell /usr/bin/sdl2-config --libs)

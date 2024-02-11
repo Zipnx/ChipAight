@@ -26,10 +26,12 @@ To run you can then use
 If a file is not specified a default test file will be used
 
 ## TODO:
- - [ ] Add a proper display (probably SDL2, yep)
- - [ ] Keyboard inputs
- - [ ] There are still some OPs missing
+ - [x] Add a proper display
+ - [x] Keyboard inputs
+ - [ ] Drawing to display
  - [ ] Documentation (lmao)
  - [ ] Fix timers to tick at 60hz
  - [ ] Cmdline arguments
  - [ ] Proper logging
+ - [ ] Fix the input mapping
+ - [ ] Properly have SDL2 render at 60fps

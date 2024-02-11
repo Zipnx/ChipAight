@@ -14,7 +14,10 @@ struct Display {
     int width;
     int height;
 
+    int currentFrameTimeMs;
+
 };
+
 
 uint16_t get_keypresses(struct Display* display);
 

@@ -10,6 +10,10 @@ SDL_KeyCode key_mappings[16] = {
     SDLK_h, SDLK_j, SDLK_k, SDLK_l
 };
 
+bool emulator_display_loop(){
+
+}
+
 uint16_t get_keypresses(struct Display* display){
 
     SDL_Event e;
@@ -54,6 +58,8 @@ struct Display* initialize_display(int width, int height){
     dis->running = true;
     dis->width = width;
     dis->height = height;
+    
+    dis->currentFrameTimeMs = 0;
 
     dis->window = create_window("Chip Aight", width, height);
 
