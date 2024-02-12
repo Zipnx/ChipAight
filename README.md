@@ -31,7 +31,7 @@ If a file is not specified a default test file will be used
  - [x] Drawing to display
  - [ ] Documentation (lmao)
  - [x] Fix timers to tick at 60hz
- - [ ] Cmdline arguments
+ - [x] Cmdline arguments
  - [ ] Proper logging
  - [ ] Fix the input mapping
  - [x] Properly have SDL2 render at 60fps

@@ -4,21 +4,15 @@
 #include "display/display.h"
 
 #include "utils/fileutil.h"
-#include <SDL2/SDL_rect.h>
-#include <SDL2/SDL_render.h>
-#include <stdio.h>
+#include "utils/cmdlineargs.h"
 
 int main(int argc, char** argv){
+    
+    struct CmdParams* params = parse_args(argc, argv);
 
-    char* rom;
+    if (params == NULL) return 1;
 
-    if (argc > 1){
-        rom = argv[1];
-    } else {
-        rom = "./tests/test_arithm_carries.ch8";
-    }
-
-    struct Display* display = initialize_display(512, 256);
+    struct Display* display = initialize_display(params->windowWidth, params->windowHeight);
     
     if (display == NULL){
         fprintf(stderr, "[!] Error initializing display\n");
@@ -29,7 +23,7 @@ int main(int argc, char** argv){
 
     if (cpu == NULL) return 1;
 
-    load_file(rom, (char*)cpu->memory, 0x200);
+    load_file(params->rompath, (char*)cpu->memory, 0x200);
    
 
     if (!init_sdl2()){
