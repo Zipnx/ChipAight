@@ -43,7 +43,7 @@ int main(int argc, char** argv){
         t0 = SDL_GetTicks();
 
         cpu->pressed_keys = get_keypresses(display);
-                
+
         if (!cpu_cycle(cpu)) break;
         
         elapsedMs += SDL_GetTicks() - t0;

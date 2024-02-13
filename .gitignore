@@ -3,6 +3,9 @@
 
 emulator
 
+__pycache__/
+venv/
+
 /.git/
 /build/
 /privtests/

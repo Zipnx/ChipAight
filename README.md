@@ -30,7 +30,7 @@ If a file is not specified a default test file will be used
  - [ ] Proper logging
  - [ ] Make keys more responsive, current system is terrible
  - [x] Fix the input mapping
- - [ ] Disassembler / Assembler Tools
+ - [ ] <s>Disassembler</s> / Assembler Tools
  - [x] Add a proper display
  - [x] Properly have SDL2 render at 60fps
  - [x] Cmdline arguments
