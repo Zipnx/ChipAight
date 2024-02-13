@@ -1,8 +1,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#define DISPLAY_FPS_MS 16
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -18,8 +16,7 @@ struct Display {
 
     int upscale;
 
-    int currentFrameTimeMs;
-
+    bool executeDraw;
 };
 
 void display_draw_bit(struct Display* display, int emuX, int emuY);

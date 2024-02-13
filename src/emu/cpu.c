@@ -2,6 +2,8 @@
 #include "cpu.h"
 #include "memory.h"
 #include "opcodes.h"
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 
 char default_font[FONTS_SIZE] = {
     // 0
@@ -40,15 +42,9 @@ char default_font[FONTS_SIZE] = {
 };
 
 int cpu_display_refresh(struct CPU* cpu){
-    
-    if (cpu->display->currentFrameTimeMs++ > DISPLAY_FPS_MS){
-        cpu->display->currentFrameTimeMs = 0;
-        
-        // Finally tick down at 60fps
-        cpu->delay_timer--;
-        cpu->sound_timer--;
 
-        SDL_SetRenderDrawColor(cpu->display->renderer, 255, 255, 255, 255); 
+    if ( cpu->display->executeDraw ){
+        cpu->display->executeDraw = false;
         
         int curX, curY;
 
@@ -57,8 +53,15 @@ int cpu_display_refresh(struct CPU* cpu){
             curY = i / 64;
             curX = i % 64;
 
-            if (cpu->display_data[i] != 0)
+            // This is terrible, it's done to avoid clearing the screen,
+            // way way way less performant, find a better way
+            if (cpu->display_data[i] != 0){
+                SDL_SetRenderDrawColor(cpu->display->renderer, 255, 255, 255, 255);
                 display_draw_bit(cpu->display, curX, curY);
+            } else {
+                SDL_SetRenderDrawColor(cpu->display->renderer, 0, 0, 0, 255);
+                display_draw_bit(cpu->display, curX, curY);
+            }
 
         }
 
@@ -135,6 +138,10 @@ struct CPU* init_cpu(struct Display* targetDisplay){
 
     cpu->delay_timer = 0;
     cpu->sound_timer = 0;
+
+    // Seed the prng
+    srand(time(NULL));
+
 
     return cpu;
 }

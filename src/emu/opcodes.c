@@ -11,6 +11,8 @@ int op_draw_sprite(struct CPU *cpu, int originX, int originY, int height){
 
     cpu->V[0xf] = 0;
     
+    cpu->display->executeDraw = true;
+
     uint8_t sourceData;
     size_t displayDataCursor;
 

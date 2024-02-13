@@ -4,11 +4,11 @@
 
 
 // As specified in the reference 1-16
-SDL_KeyCode key_mappings[16] = {
-    SDLK_q, SDLK_w, SDLK_e, SDLK_r,
-    SDLK_a, SDLK_s, SDLK_d, SDLK_f,
-    SDLK_z, SDLK_x, SDLK_c, SDLK_v,
-    SDLK_h, SDLK_j, SDLK_k, SDLK_l
+char key_mappings[16] = {
+    'x', '1', '2', '3',
+    'q', 'w', 'e', 'a',
+    's', 'd', 'z', 'c',
+    '4', 'r', 'f', 'v'
 };
 
 void display_draw_bit(struct Display *display, int emuX, int emuY){
@@ -36,7 +36,7 @@ uint16_t get_keypresses(struct Display* display){
         // Yes, this is very inefficient, idc
         for (int i = 0; i < 16; i++){
             
-            if (e.key.keysym.sym == (char)key_mappings[i]){
+            if (e.key.keysym.sym == key_mappings[i]){
 
                 keybits |= (0x1 << i);
 
@@ -66,7 +66,7 @@ struct Display* initialize_display(int width, int height){
 
     dis->upscale = 8;
 
-    dis->currentFrameTimeMs = 0;
+    dis->executeDraw = false;
 
     dis->window = create_window("Chip Aight", width, height);
 

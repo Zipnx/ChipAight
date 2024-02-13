@@ -5,6 +5,7 @@
 
 #include "utils/fileutil.h"
 #include "utils/cmdlineargs.h"
+#include <SDL2/SDL_timer.h>
 
 int main(int argc, char** argv){
     
@@ -33,15 +34,32 @@ int main(int argc, char** argv){
 
     printf("[+] SDL2 Initialized\n");
     
+    
+    int t0;
+    int elapsedMs = 0;
 
     while (display->running) {
         
-        cpu->pressed_keys = get_keypresses(display);
+        t0 = SDL_GetTicks();
 
+        cpu->pressed_keys = get_keypresses(display);
+                
         if (!cpu_cycle(cpu)) break;
         
-        if (!cpu_display_refresh(cpu)) break;
+        elapsedMs += SDL_GetTicks() - t0;
+
+        if (elapsedMs > 16){
+            
+            // Finally tick down at 60fps
+            cpu->delay_timer--;
+            cpu->sound_timer--;
+
+            elapsedMs = 0;
+        }
         
+
+        if (!cpu_display_refresh(cpu)) break;
+
     }
 
     deinit_display(display);
