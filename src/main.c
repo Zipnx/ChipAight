@@ -42,7 +42,9 @@ int main(int argc, char** argv){
         
         t0 = SDL_GetTicks();
 
-        cpu->pressed_keys = get_keypresses(display);
+        if (!get_keypresses(&cpu->pressed_keys)){
+            display->running = false;
+        }
 
         if (!cpu_cycle(cpu)) break;
         

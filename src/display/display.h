@@ -20,7 +20,7 @@ struct Display {
 };
 
 void display_draw_bit(struct Display* display, int emuX, int emuY);
-uint16_t get_keypresses(struct Display* display);
+bool get_keypresses(uint16_t* keybits);
 
 struct Display* initialize_display(int width, int height);
 void deinit_display(struct Display* display);

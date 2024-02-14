@@ -28,7 +28,7 @@ If a file is not specified a default test file will be used
 ## TODO:
  - [ ] Documentation (lmao)
  - [ ] Proper logging
- - [ ] Make keys more responsive, current system is terrible
+ - [x] Make keys more responsive, current system is terrible
  - [x] Fix the input mapping
  - [ ] <s>Disassembler</s> / Assembler Tools
  - [x] Add a proper display

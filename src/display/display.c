@@ -1,6 +1,7 @@
 
 #include "display.h"
 #include "gfxs.h"
+#include <SDL2/SDL_events.h>
 
 
 // As specified in the reference 1-16
@@ -19,18 +20,32 @@ void display_draw_bit(struct Display *display, int emuX, int emuY){
 
 }
 
-uint16_t get_keypresses(struct Display* display){
+bool get_keypresses(uint16_t* keybits){
 
     SDL_Event e;
-    uint16_t keybits = 0;
 
     while (SDL_PollEvent(&e) != 0){
         
         if (e.type == SDL_QUIT) {
-            display->running = false;
-            continue;
+            return false;
         }
-        
+
+        if (e.type == SDL_KEYDOWN){
+
+            for (int i = 0; i < 16; i++){
+                if (e.key.keysym.sym == key_mappings[i])
+                    *keybits |= (0x1 << i);
+            }
+
+        } else if (e.type == SDL_KEYUP){
+
+            for (int i = 0; i < 16; i++)
+                if (e.key.keysym.sym == key_mappings[i])
+                    *keybits ^= (0x1 << i);
+
+        }
+
+        /*
         if (e.type != SDL_KEYDOWN) continue;
 
         // Yes, this is very inefficient, idc
@@ -43,6 +58,7 @@ uint16_t get_keypresses(struct Display* display){
             }
 
         }
+        */
 
 
     }
