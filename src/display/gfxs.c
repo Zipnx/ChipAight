@@ -1,5 +1,6 @@
 
 #include "gfxs.h"
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
@@ -31,7 +32,7 @@ void draw_square(SDL_Renderer *renderer, int x, int y, int dim){
 
 bool init_sdl2(){
 
-    return (SDL_Init(SDL_INIT_EVERYTHING) >= 0);
+    return (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS | SDL_INIT_TIMER) >= 0);
 
 }
 

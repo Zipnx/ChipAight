@@ -23,11 +23,19 @@ To run you can then use
 ```
 ./emulator <CH8 Bytecode File>
 ```
+
+or to print the help menu:
+```
+./emulator -h
+```
+
+
 If a file is not specified a default test file will be used
 
 ## TODO:
  - [ ] Documentation (lmao)
  - [ ] Proper logging
+ - [ ] More args
  - [x] Make keys more responsive, current system is terrible
  - [x] Fix the input mapping
  - [ ] <s>Disassembler</s> / Assembler Tools

@@ -58,6 +58,11 @@ int main(int argc, char** argv){
             elapsedMs = 0;
         }
         
+        if (cpu->sound_timer > 0){
+            sound_start(display);
+        } else {
+            sound_stop(display);
+        }
 
         if (!cpu_display_refresh(cpu)) break;
 

@@ -1,8 +1,5 @@
 
 #include "display.h"
-#include "gfxs.h"
-#include <SDL2/SDL_events.h>
-
 
 // As specified in the reference 1-16
 char key_mappings[16] = {
@@ -83,6 +80,15 @@ struct Display* initialize_display(int width, int height){
     dis->upscale = 8;
 
     dis->executeDraw = false;
+    dis->isSoundPlaying = false;
+    
+    dis->audio_device = init_emu_soundfrequency(); 
+    
+    if (dis->audio_device == 0){
+        fprintf(stderr, "[!] Error initializing emulator audio device. Error = %s\n",
+                SDL_GetError());
+        fprintf(stdout, "[*] Proceeding without audio\n");
+    }
 
     dis->window = create_window("Chip Aight", width, height);
 
@@ -101,6 +107,22 @@ struct Display* initialize_display(int width, int height){
     }
 
     return dis;
+
+}
+
+void sound_start(struct Display* display){
+
+    if (display->audio_device != 0 && display->isSoundPlaying) return;
+
+    SDL_PauseAudioDevice(display->audio_device, 0);
+
+}
+
+void sound_stop(struct Display *display){
+    
+    if (display->audio_device != 0 && !display->isSoundPlaying) return;
+
+    SDL_PauseAudioDevice(display->audio_device, 1);
 
 }
 

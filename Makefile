@@ -30,7 +30,7 @@ build:
 	$(MAKE) $(BINDIR)$(BINNAME)
 
 $(BINDIR)$(BINNAME): $(OBJS)
-	$(CC) $(OBJS) -o $@ $(LDFLAGS) $(SDL_LDFLAGS)
+	$(CC) $(OBJS) -o $@ $(LDFLAGS) -lm $(SDL_LDFLAGS)
 
 $(BUILDDIR)%.c.o: %.c
 	mkdir -p $(dir $@)
