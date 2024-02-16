@@ -5,7 +5,6 @@
 
 #include "utils/fileutil.h"
 #include "utils/cmdlineargs.h"
-#include <SDL2/SDL_timer.h>
 
 int main(int argc, char** argv){
     
@@ -66,6 +65,8 @@ int main(int argc, char** argv){
 
     deinit_display(display);
     clean_sdl2();
+    
+    deinit_cpu(cpu);
 
     return 0;
 }

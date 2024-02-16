@@ -2,8 +2,6 @@
 #include "cpu.h"
 #include "memory.h"
 #include "opcodes.h"
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_timer.h>
 
 char default_font[FONTS_SIZE] = {
     // 0
@@ -144,6 +142,16 @@ struct CPU* init_cpu(struct Display* targetDisplay){
 
 
     return cpu;
+}
+
+void deinit_cpu(struct CPU *cpu){
+
+    free(cpu->display_data);
+    free(cpu->memory);
+
+    // Display is freed on its own dont wanna doublefree
+    free(cpu);
+    return;
 }
 
 void cpu_info_registers(struct CPU *cpu){

@@ -41,6 +41,7 @@ int cpu_display_refresh(struct CPU* cpu);
 int cpu_cycle(struct CPU* cpu);
 
 struct CPU* init_cpu(struct Display* targetDisplay);
+void deinit_cpu(struct CPU* cpu);
 
 void cpu_info_registers(struct CPU* cpu);
 
